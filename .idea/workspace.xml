@@ -4,20 +4,43 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1171ddb8-fe07-49ef-9021-dd6599fa9bb6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+    <list default="true" id="1171ddb8-fe07-49ef-9021-dd6599fa9bb6" name="Changes" comment="Added the convertStringToBits method">
+      <change afterPath="$PROJECT_DIR$/.idea/intellij-javadocs-4.0.1.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/stegrandom/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stegrandom/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/stegrandom/steganography/Steganography.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stegrandom/steganography/Steganography.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/stegrandom/utilites/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stegrandom/utilites/Utils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;osamaps518&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/osamaps518/Steg_Hide_Random.git&quot;,
+    &quot;accountId&quot;: &quot;22be6220-aa0a-419f-88ae-6b1db5bc3405&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2npdEvfembDpfQKnsmWpiY3bTHg" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -26,13 +49,36 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Main.executor": "Run",
+    "Application.Steganography.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/osamaps/IdeaProjects/Steg_Hide_Random/src/main/resources",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Steganography" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.stegrandom.Main" />
+      <module name="Steg_Hide_Random" />
+      <option name="PROGRAM_PARAMETERS" value="src/main/resources/hacker.png  &quot;secret message&quot;" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -49,11 +95,27 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1729673846196</updated>
-      <workItem from="1729673847296" duration="2000" />
+      <workItem from="1729673847296" duration="4708000" />
+      <workItem from="1729683787151" duration="11000" />
+      <workItem from="1729683812167" duration="1180000" />
+      <workItem from="1729931670773" duration="5787000" />
     </task>
+    <task id="LOCAL-00001" summary="Added the convertStringToBits method">
+      <option name="closed" value="true" />
+      <created>1729683439556</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1729683439556</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added the convertStringToBits method" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added the convertStringToBits method" />
   </component>
 </project>
