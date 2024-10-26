@@ -13,14 +13,23 @@ public class Main {
         // Using Random
         Random rand1 = new Random(12345);
         Random rand2 = new Random(12345);
-//        System.out.println(rand1.nextInt(100) == rand2.nextInt(100)); // true - same numbers
+        // System.out.println(rand1.nextInt(100) == rand2.nextInt(100)); // true - same numbers
 
         String input = "This is the secret message";
-        System.out.println(Utils.convertStringToBits(input));
 
-        //BufferedImage image = Utils.readImage(args[0]);
-        //System.out.println(image.getRGB(0,0));
+        // Convert the input string to bits
+        StringBuilder bits = Utils.convertStringToBits(input);
+        System.out.println("Bits: " + bits);
 
-        System.out.println(Utils.convertBitsToString(input));
+        // Convert the bits back to string
+        String output = Utils.convertBitsToString(bits);
+        System.out.println("Converted back to String: " + output);
+
+        // Verify if the output matches the input
+        if (input.equals(output)) {
+            System.out.println("Success! The output matches the original input.");
+        } else {
+            System.out.println("Error: The output does not match the original input.");
+        }
     }
 }
