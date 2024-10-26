@@ -1,11 +1,14 @@
 package com.stegrandom.steganography;
 
+import com.stegrandom.utilites.Utils;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Random;
 
 public class Steganography {
 
@@ -13,14 +16,36 @@ public class Steganography {
        int imageHeight = inputImage.getHeight();
        int imageWidth = inputImage.getWidth();
 
+       // Convert the message to a binary string
+       StringBuilder messageBits = Utils.convertStringToBits(secretMsg);
+       int messageLength = messageBits.length();
 
-       for(int y = 0; y < imageHeight; y++){
-           for(int x = 0; x < imageWidth; x++){
-              int rgb = inputImage.getRGB(x, y);
-              Map colors = extractColorsFromRGB(rgb);
-           }
+       // Set up a random distribution
+       Random random = new Random(12345);  // Seed for reproducibility
+       int bitIndex = 0;
+// Loop over the image pixels
+       while (bitIndex < messageLength) {
+           int x = random.nextInt(imageWidth);
+           int y = random.nextInt(imageHeight);
+
+           int rgb = inputImage.getRGB(x, y);
+           Map<String, Integer> colors = extractColorsFromRGB(rgb);
+
+           // Modify the RGB values based on the message bits
+           int red = (colors.get("red") & 0xFE) | (messageBits.charAt(bitIndex++) - '0');
+           int green = (bitIndex < messageLength) ? (colors.get("green") & 0xFE) | (messageBits.charAt(bitIndex++) - '0') : colors.get("green");
+           int blue = (bitIndex < messageLength) ? (colors.get("blue") & 0xFE) | (messageBits.charAt(bitIndex++) - '0') : colors.get("blue");
+
+           // Reconstruct the RGB integer with modified colors
+           int modifiedRGB = (colors.get("alpha") << 24) | (red << 16) | (green << 8) | blue;
+
+           // Update the image with the modified RGB value
+           inputImage.setRGB(x, y, modifiedRGB);
        }
+
+       return inputImage;
    }
+
 //    The RGB values you get will be packed into a single integer, where:
 //
 //    rgb       = AAAAAAAA RRRRRRRR GGGGGGGG BBBBBBBB

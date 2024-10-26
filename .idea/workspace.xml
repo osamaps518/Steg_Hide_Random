@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1171ddb8-fe07-49ef-9021-dd6599fa9bb6" name="Changes" comment="I have commited the convert bits to string method">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/stegrandom/utilites/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stegrandom/utilites/Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/stegrandom/steganography/Steganography.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stegrandom/steganography/Steganography.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,15 +105,34 @@
       <option name="project" value="LOCAL" />
       <updated>1729683439556</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="I have commited the convert bits to string method">
+      <created>1729957324846</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1729957324846</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added the convertStringToBits method" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added the convertStringToBits method" />
+    <MESSAGE value="I have commited the convert bits to string method" />
+    <option name="LAST_COMMIT_MESSAGE" value="I have commited the convert bits to string method" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
