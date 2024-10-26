@@ -2,11 +2,7 @@ package com.stegrandom.steganography;
 
 import com.stegrandom.utilites.Utils;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Random;
 
@@ -15,10 +11,15 @@ public class Steganography {
    public static BufferedImage hideMessage(BufferedImage inputImage, String secretMsg){
        int imageHeight = inputImage.getHeight();
        int imageWidth = inputImage.getWidth();
+       int totalPixels = imageWidth * imageHeight;
 
        // Convert the message to a binary string
        StringBuilder messageBits = Utils.convertStringToBits(secretMsg);
        int messageLength = messageBits.length();
+
+       if(!Utils.isImgSizeLongEnough(messageLength, imageHeight, messageLength)){
+           throw new IllegalArgumentException("Image size is too short.");
+       }
 
        // Set up a random distribution
        Random random = new Random(12345);  // Seed for reproducibility
@@ -32,19 +33,66 @@ public class Steganography {
            int rgb = inputImage.getRGB(x, y);
            Map<String, Integer> colors = extractColorsFromRGB(rgb);
 
-           // Modify the RGB values based on the message bits
-           int red = (colors.get("red") & 0xFE) | (messageBits.charAt(bitIndex++) - '0');
-           int green = (bitIndex < messageLength) ? (colors.get("green") & 0xFE) | (messageBits.charAt(bitIndex++) - '0') : colors.get("green");
-           int blue = (bitIndex < messageLength) ? (colors.get("blue") & 0xFE) | (messageBits.charAt(bitIndex++) - '0') : colors.get("blue");
-
-           // Reconstruct the RGB integer with modified colors
-           int modifiedRGB = (colors.get("alpha") << 24) | (red << 16) | (green << 8) | blue;
+           String colorSelected = selectColor(totalPixels, bitIndex);
+           int currentBit = Utils.charToDigit(messageBits.charAt(bitIndex));
+           int selectedColorAfterModification = insertBitIntoColor(currentBit, colors.get(colorSelected));
+           int modifiedRGB = reconstructRGB(colors.get("alpha"), colors.get("red"), colors.get("green"), colors.get("blue"), selectedColorAfterModification, colorSelected);
 
            // Update the image with the modified RGB value
            inputImage.setRGB(x, y, modifiedRGB);
        }
 
        return inputImage;
+   }
+
+    /**
+     * Select color string.
+     *
+     * @param totalPixels the total pixels
+     * @param bitIndex    the bit index
+     * @return the string
+     */
+    // This method logic needs review
+    public static String selectColor(int totalPixels, int bitIndex){
+       if(bitIndex < totalPixels){
+           return "blue";
+       }
+       else if (bitIndex * 2 < totalPixels){
+           return "red";
+       }
+       return "green";
+   }
+
+
+    /**
+     * Reconstruct rgb int.
+     *
+     * @param alpha         the alpha
+     * @param red           the red
+     * @param green         the green
+     * @param blue          the blue
+     * @param modifiedColor the modified color
+     * @param colorSelected the color selected
+     * @return the int
+     */
+    public static int reconstructRGB(int alpha, int red, int green, int blue, int modifiedColor, String colorSelected){
+        if(colorSelected.equals("blue")){
+            return assembleRGB(alpha, red, green, modifiedColor);
+        }
+        else if(colorSelected.equals("red")){
+            return assembleRGB(alpha, modifiedColor, green, blue);
+        }
+        else { // green
+            return assembleRGB(alpha, red, modifiedColor, blue);
+        }
+    }
+
+    public static int assembleRGB(int alpha, int red, int green, int blue){
+        return alpha << 24 | red << 16 | green << 8 | blue;
+    }
+   public static int insertBitIntoColor(int bit, int color) {
+       // use 0xFE to clear the least significant bit "11111110"
+       return (color & 0xFE) | bit;
    }
 
 //    The RGB values you get will be packed into a single integer, where:
