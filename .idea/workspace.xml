@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1171ddb8-fe07-49ef-9021-dd6599fa9bb6" name="Changes" comment="I have commited the convert bits to string method">
+    <list default="true" id="1171ddb8-fe07-49ef-9021-dd6599fa9bb6" name="Changes" comment="I have commited the steg class">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/stegrandom/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stegrandom/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/stegrandom/steganography/Steganography.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stegrandom/steganography/Steganography.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -112,7 +113,14 @@
       <option name="project" value="LOCAL" />
       <updated>1729957324846</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="I have commited the steg class">
+      <created>1729960426269</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1729960426269</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -132,7 +140,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added the convertStringToBits method" />
     <MESSAGE value="I have commited the convert bits to string method" />
-    <option name="LAST_COMMIT_MESSAGE" value="I have commited the convert bits to string method" />
+    <MESSAGE value="I have commited the steg class" />
+    <option name="LAST_COMMIT_MESSAGE" value="I have commited the steg class" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

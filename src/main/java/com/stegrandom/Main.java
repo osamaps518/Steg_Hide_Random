@@ -16,9 +16,11 @@ public class Main {
 //        System.out.println(rand1.nextInt(100) == rand2.nextInt(100)); // true - same numbers
 
         String input = "This is the secret message";
-//        System.out.println(Utils.convertStringToBits(input));
+        System.out.println(Utils.convertStringToBits(input));
 
-        BufferedImage image = Utils.readImage(args[0]);
-        System.out.println(image.getRGB(0,0));
+        //BufferedImage image = Utils.readImage(args[0]);
+        //System.out.println(image.getRGB(0,0));
+
+        System.out.println(Utils.convertBitsToString(input));
     }
 }

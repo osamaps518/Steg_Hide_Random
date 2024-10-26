@@ -23,7 +23,8 @@ public class Steganography {
        // Set up a random distribution
        Random random = new Random(12345);  // Seed for reproducibility
        int bitIndex = 0;
-// Loop over the image pixels
+
+       // Loop over the image pixels
        while (bitIndex < messageLength) {
            int x = random.nextInt(imageWidth);
            int y = random.nextInt(imageHeight);
