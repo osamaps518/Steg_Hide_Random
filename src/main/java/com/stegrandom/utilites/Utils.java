@@ -13,4 +13,21 @@ public class Utils {
         }
         return bits;
     }
+
+    // Converts a bit sequence back into a String (for decoding)
+    public static String convertBitsToString(StringBuilder bits) {
+        StringBuilder message = new StringBuilder();
+
+        for (int i = 0; i < bits.length(); i += 8) {
+            int charCode = 0;
+
+            // Collect each byte (8 bits) and convert to a character
+            for (int j = 0; j < 8; j++) {
+                charCode = (charCode << 1) | (bits.charAt(i + j) - '0');
+            }
+            message.append((char) charCode);
+        }
+
+        return message.toString();
+    }
 }
