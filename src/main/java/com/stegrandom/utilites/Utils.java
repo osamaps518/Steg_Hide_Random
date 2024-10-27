@@ -1,8 +1,13 @@
 package com.stegrandom.utilites;
 
+import java.nio.charset.StandardCharsets;
+
 public class Utils {
     public static StringBuilder convertStringToBits(String input){
-        byte[] bytes = input.getBytes();
+        if(input == null || input.isEmpty()){
+            return null;
+        }
+        byte[] bytes = input.getBytes(StandardCharsets.UTF_8);
         StringBuilder bits = new StringBuilder();
 
         for (byte b : bytes) {
@@ -25,19 +30,6 @@ public class Utils {
     public static int charToDigit(char c) {
         // Subtracts the Ascii value of c from 0 and you get c in int instead of char
         return c - '0';
-    }
-    /**
-     * Is img size long enough boolean.
-     *
-     * @param msgLength   the msg length
-     * @param imageHeight the image height
-     * @param imageWidth  the image width
-     * @return the boolean
-     */
-    public static boolean isImgSizeLongEnough(int msgLength, int imageHeight, int imageWidth){
-        int totalPixels = imageWidth * imageHeight;
-        int totalBitsAvailable = totalPixels * 3;  // 3 for B,R,G channels
-        return msgLength <= totalBitsAvailable;
     }
 
     // Converts a bit sequence back into a String (for decoding)
