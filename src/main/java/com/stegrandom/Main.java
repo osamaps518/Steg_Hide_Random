@@ -2,93 +2,122 @@ package com.stegrandom;
 
 import com.stegrandom.Model.SteganographyImage;
 import com.stegrandom.steganography.Steganography;
-import com.stegrandom.utilites.Utils;
-
-//import javax.imageio.ImageIO;
-//import java.awt.image.BufferedImage;
-//import java.io.File;
-//import java.io.IOException;
-//import java.util.Random;
-
-//public class Main {
-
-//    public static void main(String[] args) throws IOException {
-//        // Using Random
-//        Random rand1 = new Random(12345);
-//        Random rand2 = new Random(12345);
-//        // System.out.println(rand1.nextInt(100) == rand2.nextInt(100)); // true - same numbers
-//
-//        String input = "This is the secret message";
-//
-//        // Convert the input string to bits
-//        StringBuilder bits = Utils.convertStringToBits(input);
-//        System.out.println("Bits: " + bits);
-//
-//        // Convert the bits back to string
-//        String output = Utils.convertBitsToString(bits);
-//        System.out.println("Converted back to String: " + output);
-//
-//        // Verify if the output matches the input
-//        if (input.equals(output)) {
-//            System.out.println("Success! The output matches the original input.");
-//        } else {
-//            System.out.println("Error: The output does not match the original input.");
-//        }
-//    }
-//}
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Main {
+public class Main extends Application {
+
+    private File selectedFile;
+    private TextArea messageInput;
+    private Label decodeOutput;
+
     public static void main(String[] args) {
-        if (args.length < 2) {
-            System.out.println("Usage: java Main <input_image> <secret_message>");
-            System.out.println("Example: java Main image.png \"Hello World\"");
-            System.exit(1);
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Steganography App");
+
+        // File selection for encoding/decoding
+        Button fileButton = new Button("Select Image File");
+        Label fileLabel = new Label("No file selected");
+        fileButton.setOnAction(e -> selectFile(primaryStage, fileLabel));
+
+        // Encoding section
+        Label encodeLabel = new Label("Enter Secret Message:");
+        messageInput = new TextArea();
+        messageInput.setPromptText("Enter message to hide...");
+        Button encodeButton = new Button("Encode Message");
+        encodeButton.setOnAction(e -> encodeMessage());
+
+        // Decoding section
+        Button decodeButton = new Button("Decode Message");
+        decodeOutput = new Label("Decoded Message will appear here...");
+        decodeButton.setOnAction(e -> decodeMessage());
+
+        // Layout
+        VBox layout = new VBox(10, fileButton, fileLabel, encodeLabel, messageInput, encodeButton, decodeButton, decodeOutput);
+        layout.setPadding(new Insets(15));
+        Scene scene = new Scene(layout, 400, 500);
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void selectFile(Stage primaryStage, Label fileLabel) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+        selectedFile = fileChooser.showOpenDialog(primaryStage);
+
+        if (selectedFile != null) {
+            fileLabel.setText("Selected File: " + selectedFile.getName());
+        } else {
+            fileLabel.setText("No file selected");
+        }
+    }
+
+    private void encodeMessage() {
+        if (selectedFile == null || messageInput.getText().isEmpty()) {
+            showAlert("Please select an image and enter a message to encode.");
+            return;
         }
 
         try {
-            // Read input image
-            String inputImagePath = args[0];
-            BufferedImage originalImage = ImageIO.read(new File(inputImagePath));
-
-            // Get secret message (combine all remaining args to handle spaces)
-            StringBuilder messageBuilder = new StringBuilder();
-            for (int i = 1; i < args.length; i++) {
-                if (i > 1) messageBuilder.append(" ");
-                messageBuilder.append(args[i]);
-            }
-            String secretMessage = messageBuilder.toString();
-
-            // Create steganography image
+            BufferedImage originalImage = ImageIO.read(selectedFile);
             SteganographyImage stegImage = new SteganographyImage(originalImage);
+            BufferedImage modifiedImage = Steganography.hideMessage(stegImage, messageInput.getText());
 
-            // Hide message
-            System.out.println("Hiding message: " + secretMessage);
-            BufferedImage modifiedImage = Steganography.hideMessage(stegImage, secretMessage);
+            File outputFile = new File("steg_output.png");
+            ImageIO.write(modifiedImage, "PNG", outputFile);
 
-            // Save modified image
-            String outputPath = "steg_output.png";
-            ImageIO.write(modifiedImage, "PNG", new File(outputPath));
-            System.out.println("Modified image saved as: " + outputPath);
-
-            // Verify by extracting
-            SteganographyImage extractionImage = new SteganographyImage(modifiedImage);
-            StringBuilder messageBits = Utils.convertStringToBits(secretMessage);
-            String extractedMessage = Steganography.extractMessage(extractionImage, messageBits.length());
-            System.out.println("Extracted message: " + extractedMessage);
-            System.out.println("Message successfully hidden and verified!");
+            showAlert("Message encoded! Saved as steg_output.png");
 
         } catch (IOException e) {
-            System.err.println("Error reading/writing image: " + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            System.err.println("Error processing message: " + e.getMessage());
+            showAlert("Error reading or writing the image.");
         } catch (Exception e) {
-            System.err.println("Unexpected error: " + e.getMessage());
-            e.printStackTrace();
+            showAlert("An error occurred: " + e.getMessage());
         }
+    }
+
+    private void decodeMessage() {
+        if (selectedFile == null) {
+            showAlert("Please select an image to decode.");
+            return;
+        }
+
+        try {
+            BufferedImage encodedImage = ImageIO.read(selectedFile);
+            SteganographyImage stegImage = new SteganographyImage(encodedImage);
+
+            // Estimate message length for extraction (adjust as needed)
+            int estimatedMessageLength = 100 * 8;  // Approximate bits needed for a 100-character message
+            String decodedMessage = Steganography.extractMessage(stegImage, estimatedMessageLength);
+
+            decodeOutput.setText("Decoded Message: " + decodedMessage);
+
+        } catch (IOException e) {
+            showAlert("Error reading the image.");
+        } catch (Exception e) {
+            showAlert("An error occurred: " + e.getMessage());
+        }
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
