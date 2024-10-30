@@ -6,6 +6,9 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -13,7 +16,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +25,7 @@ public class Main extends Application {
     private File selectedFile;
     private TextArea messageInput;
     private Label decodeOutput;
+    private ImageView imageView; // To display the selected image
 
     public static void main(String[] args) {
         launch(args);
@@ -37,6 +40,11 @@ public class Main extends Application {
         Label fileLabel = new Label("No file selected");
         fileButton.setOnAction(e -> selectFile(primaryStage, fileLabel));
 
+        // Image view for displaying selected image
+        imageView = new ImageView();
+        imageView.setFitWidth(300);  // Set width to fit the layout
+        imageView.setPreserveRatio(true);  // Preserve image aspect ratio
+
         // Encoding section
         Label encodeLabel = new Label("Enter Secret Message:");
         messageInput = new TextArea();
@@ -50,9 +58,9 @@ public class Main extends Application {
         decodeButton.setOnAction(e -> decodeMessage());
 
         // Layout
-        VBox layout = new VBox(10, fileButton, fileLabel, encodeLabel, messageInput, encodeButton, decodeButton, decodeOutput);
+        VBox layout = new VBox(10, fileButton, fileLabel, imageView, encodeLabel, messageInput, encodeButton, decodeButton, decodeOutput);
         layout.setPadding(new Insets(15));
-        Scene scene = new Scene(layout, 400, 500);
+        Scene scene = new Scene(layout, 400, 600);
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -65,8 +73,11 @@ public class Main extends Application {
 
         if (selectedFile != null) {
             fileLabel.setText("Selected File: " + selectedFile.getName());
+            Image image = new Image(selectedFile.toURI().toString());
+            imageView.setImage(image);  // Display the selected image
         } else {
             fileLabel.setText("No file selected");
+            imageView.setImage(null);  // Clear the image view
         }
     }
 
