@@ -2,168 +2,28 @@ package com.stegrandom.steganography;
 
 import com.stegrandom.Model.SteganographyImage;
 import com.stegrandom.utilites.Utils;
-
+import org.apache.commons.math3.random.MersenneTwister;
 import java.awt.image.BufferedImage;
-import java.util.BitSet;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 /**
- * The type Steganography.
- */
-//public class Steganography {
-//private static final Map<String, BitSet> channelPositions = new HashMap<>();
-//
-//    // Select appropriate BitSet based on current channel
-//    private static BitSet selectBitSet(String colorSelected) {
-//        return channelPositions.get(colorSelected);
-//    }
-//    // must change totalPixels to long later when you implement other random generation algorithm
-//    private static int getAndMarkRandomPosition(Random random, BitSet channelPositions, int totalPixels) {
-//        int position;
-//        do {
-//            position = random.nextInt(totalPixels);
-//        } while (channelPositions.get(position)); // Keep trying until we find unused position
-//
-//        channelPositions.set(position); // Mark as used
-//        return position;
-//    }
-//    public static BufferedImage hideMessage(SteganographyImage image, String secretMsg) {
-//        StringBuilder messageBits = Utils.convertStringToBits(secretMsg);
-//        int messageLength = messageBits.length();
-//
-//        // Initialize MT19937 with seed
-//        Random random = new Random(12345);
-//
-//        // We need three BitSets, one for each color channel
-//        channelPositions.put("blue", new BitSet((int)image.getTotalPixels()));
-//        channelPositions.put("red", new BitSet((int)image.getTotalPixels()));
-//        channelPositions.put("green", new BitSet((int)image.getTotalPixels()));
-//
-//
-//        int bitIndex = 0;
-//        while (bitIndex < messageLength) {
-//            String colorSelected = selectColor(image.getTotalPixels(), bitIndex);
-//            BitSet currentChannelPositions = selectBitSet(colorSelected);
-//            int position = getAndMarkRandomPosition(random, currentChannelPositions, (int)image.getTotalPixels());
-//
-////        Positions:
-////        0  1  2  3
-////        4  5  6  7
-////        8  9 10 11
-////
-////        (x,y) coordinates:
-////        (0,0) (1,0) (2,0) (3,0)
-////        (0,1) (1,1) (2,1) (3,1)
-////        (0,2) (1,2) (2,2) (3,2)
-//            // Convert position to x,y coordinates
-//            int x = (int)(position % image.getWidth());
-//            int y = (int)(position / image.getWidth());
-//
-//            int rgb = image.getImage().getRGB(x, y);
-//            Map<String, Integer> colors = extractColorsFromRGB(rgb);
-//
-//            int currentBit = Utils.charToDigit(messageBits.charAt(bitIndex));
-//            int selectedColorAfterModification = insertBitIntoColor(currentBit, colors.get(colorSelected));
-//            int modifiedRGB = reconstructRGB(
-//                    colors.get("alpha"),
-//                    colors.get("red"),
-//                    colors.get("green"),
-//                    colors.get("blue"),
-//                    selectedColorAfterModification,
-//                    colorSelected
-//            );
-//
-//            image.getImage().setRGB(x, y, modifiedRGB);
-//            bitIndex++;
-//        }
-//        return image.getImage();
-//    }
-//
-//    /**
-//     * Select color string.
-//     * Priority is Blue, if exhausted then red, else green
-//     *
-//     * @param totalPixels the total pixels
-//     * @param bitIndex    the bit index
-//     * @return the string
-//     */
-//    public static String selectColor(long totalPixels, int bitIndex) {
-//        if (bitIndex < totalPixels) {
-//            return "blue";    // Use all blue channels first
-//        } else if (bitIndex < (totalPixels * 2)) {
-//            return "red";     // After blues are used, use all reds
-//        } else {
-//            return "green";   // After blues and reds, use all greens
-//        }
-//    }
-//
-//
-//    /**
-//     * Reconstruct rgb int.
-//     *
-//     * @param alpha         the alpha
-//     * @param red           the red
-//     * @param green         the green
-//     * @param blue          the blue
-//     * @param modifiedColor the modified color
-//     * @param colorSelected the color selected
-//     * @return the int
-//     */
-//    public static int reconstructRGB(int alpha, int red, int green, int blue, int modifiedColor, String colorSelected){
-//        if(colorSelected.equals("blue")){
-//            return assembleRGB(alpha, red, green, modifiedColor);
-//        }
-//        else if(colorSelected.equals("red")){
-//            return assembleRGB(alpha, modifiedColor, green, blue);
-//        }
-//        else { // green
-//            return assembleRGB(alpha, red, modifiedColor, blue);
-//        }
-//    }
-//
-//    public static int assembleRGB(int alpha, int red, int green, int blue){
-//        return alpha << 24 | red << 16 | green << 8 | blue;
-//    }
-//   public static int insertBitIntoColor(int bit, int color) {
-//       // use 0xFE to clear the least significant bit "11111110"
-//       return (color & 0xFE) | bit;
-//   }
-//
-////    The RGB values you get will be packed into a single integer, where:
-////
-////    rgb       = AAAAAAAA RRRRRRRR GGGGGGGG BBBBBBBB
-////    0xff      = 00000000 00000000 00000000 11111111
-////    rgb & 0xff = keeps only the last 8 bit
-//   public static Map<String, Integer> extractColorsFromRGB(int rgb){
-//       //    Bits 24-31: Alpha
-//       int alpha = rgb >> 24 & 255;
-//       //    Bits 16-23: Red
-//       int red = rgb >> 16 & 255;
-//       //    Bits 8-15: Green
-//       int green = rgb >> 8 & 255;
-//       //    Bits 0-7: Blue
-//       int blue = rgb & 255;
-//
-//       Map<String, Integer> colors = Map.of(
-//               "red", red,
-//               "green", green,
-//               "blue", blue,
-//               "alpha", alpha
-//       );
-//       return colors;
-//   }
-////        ImageIO.write(image, "png", new File("output.png"));
-//}
-
-/**
- * The type Steganography.
+ * Core steganography implementation class providing methods for hiding and extracting
+ * messages within images using the LSB (Least Significant Bit) technique with a
+ * pseudo-random distribution pattern.
  */
 public class Steganography {
 
-    // must change totalPixels to long later when you implement other random generation algorithm
-    public static int getAndMarkRandomPosition(Random random, SteganographyImage image, String channel) {
+    /**
+     * Generates and marks a random unused position in the specified color channel.
+     * Uses pseudo-random number generation to distribute message bits across the image.
+     * The method ensures the same position isn't used twice within the same channel.
+     *
+     * @param random The random number generator with a fixed seed for reproducibility
+     * @param image The steganography image being processed
+     * @param channel The color channel being modified ("red", "green", or "blue")
+     * @return A random unused position in the specified channel
+     */
+    public static int getAndMarkRandomPosition(MersenneTwister random, SteganographyImage image, String channel) {
         int position;
         do {
             position = random.nextInt(image.getTotalPixels());
@@ -173,6 +33,26 @@ public class Steganography {
         return position;
     }
 
+    /**
+     * Hides a secret message within an image using LSB steganography with pseudo-random distribution.
+     * The method distributes message bits across the RGB channels sequentially, using
+     * random positions within each channel. The process uses a fixed seed for the random
+     * number generator to ensure reproducibility during extraction.
+     *
+     * The algorithm:
+     * 1. Converts the message to binary
+     * 2. Validates message length against image capacity
+     * 3. For each bit:
+     *    - Selects appropriate color channel
+     *    - Finds random unused position
+     *    - Modifies LSB of selected color at position
+     *    - Reconstructs and updates pixel
+     *
+     * @param image The steganography image to hide the message in
+     * @param secretMsg The secret message to hide
+     * @return The modified image containing the hidden message
+     * @throws IllegalArgumentException if the message is null, empty, or too long for the image
+     */
     public static BufferedImage hideMessage(SteganographyImage image, String secretMsg) {
         if (secretMsg == null) {
             throw new IllegalArgumentException("Message cannot be null");
@@ -189,7 +69,7 @@ public class Steganography {
         }
 
         // Initialize MT19937 with seed
-        Random random = new Random(12345);
+        MersenneTwister random = new MersenneTwister(12345);
 
         int bitIndex = 0;
         while (bitIndex < messageLength) {
@@ -219,6 +99,25 @@ public class Steganography {
 
         return image.getImage();
     }
+
+    /**
+     * Extracts a hidden message from a steganography image using LSB extraction with
+     * pseudo-random distribution matching the hiding process.
+     *
+     * The method must use the same seed and distribution pattern as the hiding process
+     * to successfully extract the message. It follows these steps:
+     * 1. Validates the requested message length
+     * 2. For each bit position:
+     *    - Determines the correct color channel
+     *    - Finds the corresponding random position
+     *    - Extracts the LSB from the appropriate color value
+     * 3. Converts the collected bits back to text
+     *
+     * @param image The steganography image containing the hidden message
+     * @param messageLength The length of the hidden message in bits
+     * @return The extracted secret message
+     * @throws IllegalArgumentException if messageLength is invalid or too large for the image
+     */
     public static String extractMessage(SteganographyImage image, int messageLength) {
         if (messageLength <= 0) {
             throw new IllegalArgumentException("Message length must be positive");
@@ -230,7 +129,7 @@ public class Steganography {
         }
 
         // Initialize MT19937 with same seed
-        Random random = new Random(12345);
+        MersenneTwister random = new MersenneTwister(12345);
 
         // StringBuilder to collect the bits
         StringBuilder extractedBits = new StringBuilder(messageLength);

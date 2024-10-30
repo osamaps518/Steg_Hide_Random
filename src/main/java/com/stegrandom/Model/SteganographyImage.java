@@ -5,6 +5,12 @@ import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents an image used for steganographic operations, providing methods for pixel manipulation
+ * and tracking of modified positions across different color channels (RGB).
+ * This class encapsulates all the necessary operations for hiding and extracting data
+ * within the image's color channels using the LSB (Least Significant Bit) technique.
+ */
 public class SteganographyImage {
     private final BufferedImage image;
     private final int width;
@@ -12,6 +18,12 @@ public class SteganographyImage {
     private final int totalPixels;
     private final Map<String, BitSet> channelPositions;
 
+    /**
+     * Constructs a new SteganographyImage instance from a BufferedImage.
+     * Initializes tracking for modified positions in each color channel.
+     *
+     * @param image The source image to be used for steganography operations.
+     */
     public SteganographyImage(BufferedImage image) {
         this.image = image;
         this.width = image.getWidth();
@@ -21,34 +33,67 @@ public class SteganographyImage {
         initializeChannelPositions();
     }
 
+    /**
+     * Initializes BitSet tracking for each color channel (RGB).
+     * Each BitSet tracks which pixels have been modified in its respective channel.
+     */
     private void initializeChannelPositions() {
         channelPositions.put("blue", new BitSet(totalPixels));
         channelPositions.put("red", new BitSet(totalPixels));
         channelPositions.put("green", new BitSet(totalPixels));
     }
 
-    // Core pixel manipulation methods
+    /**
+     * Retrieves the RGB value of a pixel at specified coordinates.
+     *
+     * @param x The x-coordinate of the pixel
+     * @param y The y-coordinate of the pixel
+     * @return The RGB value of the pixel as an integer
+     */
     public int getRGB(int x, int y) {
         return image.getRGB(x, y);
     }
 
+    /**
+     * Sets the RGB value of a pixel at specified coordinates.
+     *
+     * @param x The x-coordinate of the pixel
+     * @param y The y-coordinate of the pixel
+     * @param rgb The RGB value to set
+     */
     public void setRGB(int x, int y, int rgb) {
-        image.getRGB(x, y); // Optional: Add error checking for valid coordinates
+        image.getRGB(x, y);
         image.setRGB(x, y, rgb);
     }
 
-    // Coordinate conversion utilities
+    /**
+     * Converts a linear position to x,y coordinates in the image.
+     *
+     * @param position The linear position to convert
+     * @return An array containing [x, y] coordinates
+     */
     public int[] positionToCoordinates(int position) {
         int x = position % width;
         int y = position / width;
         return new int[]{x, y};
     }
 
-    // Channel tracking methods
+    /**
+     * Retrieves the BitSet tracking modified positions for a specific color channel.
+     *
+     * @param channel The color channel ("red", "green", or "blue")
+     * @return BitSet tracking modified positions for the specified channel
+     */
     public BitSet getChannelPositions(String channel) {
         return channelPositions.get(channel);
     }
 
+    /**
+     * Marks a position as used in the specified color channel.
+     *
+     * @param channel The color channel to mark
+     * @param position The position to mark as used
+     */
     public void markPositionUsed(String channel, int position) {
         BitSet channelBits = channelPositions.get(channel);
         if (channelBits != null) {
@@ -56,12 +101,24 @@ public class SteganographyImage {
         }
     }
 
+    /**
+     * Checks if a position has been used in the specified color channel.
+     *
+     * @param channel The color channel to check
+     * @param position The position to check
+     * @return true if the position has been used, false otherwise
+     */
     public boolean isPositionUsed(String channel, int position) {
         BitSet channelBits = channelPositions.get(channel);
         return channelBits != null && channelBits.get(position);
     }
 
-    // Color handling methods
+    /**
+     * Extracts individual color components from an RGB value.
+     *
+     * @param rgb The RGB value to extract colors from
+     * @return Map containing alpha, red, green, and blue color values
+     */
     public Map<String, Integer> extractColorsFromRGB(int rgb) {
         return Map.of(
                 "alpha", (rgb >> 24) & 255,
@@ -71,6 +128,14 @@ public class SteganographyImage {
         );
     }
 
+    /**
+     * Reconstructs an RGB value after modifying a specific color channel.
+     *
+     * @param colors Original color values
+     * @param modifiedChannel The channel that was modified
+     * @param modifiedValue The new value for the modified channel
+     * @return The reconstructed RGB value
+     */
     public int reconstructRGB(Map<String, Integer> colors, String modifiedChannel, int modifiedValue) {
         Map<String, Integer> updatedColors = new HashMap<>(colors);
         updatedColors.put(modifiedChannel, modifiedValue);
@@ -81,11 +146,25 @@ public class SteganographyImage {
                 updatedColors.get("blue");
     }
 
+    /**
+     * Inserts a bit into the least significant bit position of a color value.
+     *
+     * @param bit The bit to insert (0 or 1)
+     * @param color The color value to modify
+     * @return The modified color value with the new LSB
+     */
     public int insertBitIntoColor(int bit, int color) {
-        return (color & 0xFE) | bit; // Clear LSB and set it to our bit
+        // 11010101 & 11111110 -> 11010100"clear last bit" | bit -> 1101010bit
+        return (color & 0xFE) | bit;
     }
 
-    // Channel selection logic
+    /**
+     * Selects the appropriate color channel based on the bit index.
+     * Uses a sequential channel selection strategy: blue -> red -> green.
+     *
+     * @param bitIndex The index of the bit being processed
+     * @return The selected color channel ("blue", "red", or "green")
+     */
     public String selectChannel(int bitIndex) {
         if (bitIndex < totalPixels) {
             return "blue";
@@ -96,7 +175,6 @@ public class SteganographyImage {
         }
     }
 
-    // Getters
     public int getWidth() {
         return width;
     }
@@ -113,8 +191,14 @@ public class SteganographyImage {
         return image;
     }
 
-    // Capacity checking
+    /**
+     * Checks if the image can accommodate a message of the given bit length.
+     * The capacity is calculated based on using all three color channels (RGB).
+     *
+     * @param messageBitsLength The length of the message in bits
+     * @return true if the message can fit in the image, false otherwise
+     */
     public boolean canFitMessage(int messageBitsLength) {
-        return messageBitsLength <= (totalPixels * 3);  // 3 for B,R,G channels
+        return messageBitsLength <= (totalPixels * 3);
     }
 }
