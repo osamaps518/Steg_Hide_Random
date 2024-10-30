@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1171ddb8-fe07-49ef-9021-dd6599fa9bb6" name="Changes" comment="I have commited the steg class">
+    <list default="true" id="1171ddb8-fe07-49ef-9021-dd6599fa9bb6" name="Changes" comment="I have added the view image option">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/stegrandom/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/stegrandom/Main.java" afterDir="false" />
     </list>
@@ -48,13 +48,16 @@
   &quot;associatedIndex&quot;: 3
 }</component>
   <component name="ProjectId" id="2npdEvfembDpfQKnsmWpiY3bTHg" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
     "Application.Main.executor": "Run",
     "Application.Steganography.executor": "Run",
     "Downloaded.Files.Path.Enabled": "false",
@@ -150,7 +153,14 @@
       <option name="project" value="LOCAL" />
       <updated>1729961611926</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="I have added the view image option">
+      <created>1730281295168</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1730281295168</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -168,10 +178,12 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Added the convertStringToBits method" />
     <MESSAGE value="I have commited the convert bits to string method" />
     <MESSAGE value="I have commited the steg class" />
-    <option name="LAST_COMMIT_MESSAGE" value="I have commited the steg class" />
+    <MESSAGE value="I have added the view image option" />
+    <option name="LAST_COMMIT_MESSAGE" value="I have added the view image option" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
