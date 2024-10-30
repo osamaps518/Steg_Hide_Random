@@ -20,7 +20,6 @@ public class Utils {
      *         where each character is represented by 8 bits, or null if the input is
      *         null or empty.
      *
-     * @example
      * <pre>
      * String input = "A";
      * StringBuilder result = Utils.convertStringToBits(input);
@@ -53,7 +52,6 @@ public class Utils {
      * @return The integer value represented by the character.
      * @throws IllegalArgumentException if the character is not a valid digit (0-9).
      *
-     * @example
      * <pre>
      * int digit = Utils.charToDigit('5'); // Returns 5
      * </pre>
@@ -76,7 +74,6 @@ public class Utils {
      * @throws IndexOutOfBoundsException if the bits length is not a multiple of 8
      *         or if accessing an invalid position in the StringBuilder.
      *
-     * @example
      * <pre>
      * StringBuilder bits = new StringBuilder("01000001"); // Binary for 'A'
      * String result = Utils.convertBitsToString(bits); // Returns "A"

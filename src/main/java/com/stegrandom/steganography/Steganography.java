@@ -57,7 +57,9 @@ public class Steganography {
         if (secretMsg == null) {
             throw new IllegalArgumentException("Message cannot be null");
         }
-        StringBuilder messageBits = Utils.convertStringToBits(secretMsg);
+        String messageWithTerminator = secretMsg + "EOF";  // Add a terminator marker
+        StringBuilder messageBits = Utils.convertStringToBits(messageWithTerminator);
+
         if (messageBits == null) {
             throw new IllegalArgumentException("Cannot convert null or empty message to bits");
         }

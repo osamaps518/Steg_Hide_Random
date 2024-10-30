@@ -162,13 +162,12 @@ public class Main extends Application {
             BufferedImage encodedImage = ImageIO.read(selectedFile);
             SteganographyImage stegImage = new SteganographyImage(encodedImage);
 
-            // Estimate message length for extraction (adjust as needed)
-            int estimatedMessageLength = 100 * 8;  // Approximate bits needed for a 100-character message
-            String decodedMessage = Steganography.extractMessage(stegImage, estimatedMessageLength);
-
+            String extracted = Steganography.extractMessage(stegImage, stegImage.getTotalPixels());
+            String decodedMessage = extracted.substring(0, extracted.indexOf("EOF"));
             decodeOutput.setText("Decoded Message: " + decodedMessage);
+        }
 
-        } catch (IOException e) {
+        catch (IOException e) {
             showAlert("Error reading the image.");
         } catch (Exception e) {
             showAlert("An error occurred: " + e.getMessage());
