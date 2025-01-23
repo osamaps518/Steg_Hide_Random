@@ -78,6 +78,9 @@ public class Steganography {
             String colorSelected = image.selectChannel(bitIndex);
             // Get random unused position
             int position = getAndMarkRandomPosition(random, image, colorSelected);
+            System.out.println("random number: " + position);
+
+
 
             // Get coordinates and modify pixel
             int[] coordinates = image.positionToCoordinates(position);
@@ -88,7 +91,7 @@ public class Steganography {
             int rgb = image.getRGB(x, y);
             Map<String, Integer> colors = image.extractColorsFromRGB(rgb);
 
-            // Modify the selected color channel
+            // Modify the selected color channel "convert 0/1 bit from char type to int type"
             int currentBit = Utils.charToDigit(messageBits.charAt(bitIndex));
             int modifiedColor = image.insertBitIntoColor(currentBit, colors.get(colorSelected));
 

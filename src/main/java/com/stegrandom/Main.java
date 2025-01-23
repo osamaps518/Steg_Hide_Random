@@ -1,6 +1,7 @@
 package com.stegrandom;
 
 import com.stegrandom.Model.SteganographyImage;
+import com.stegrandom.encryption.RailFenceCipher;
 import com.stegrandom.steganography.Steganography;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -35,6 +36,7 @@ public class Main extends Application {
     private ProgressBar progressBar;
     private Label statusLabel;
     private VBox mainLayout;
+    private TextField depthInput;
 
     public static void main(String[] args) {
         launch(args);
@@ -136,12 +138,17 @@ public class Main extends Application {
         messageInput.setPromptText("Enter the message you want to hide...");
         messageInput.setPrefRowCount(3);
 
+        // Add rail depth input
+        Label depthLabel = new Label("Rail Fence Depth (2-10):");
+        depthInput = new TextField("3");  // Default value
+        depthInput.setPrefWidth(60);
+
         Button encodeButton = new Button("Encode Message");
         encodeButton.getStyleClass().add("primary-button");
         encodeButton.setOnAction(e -> encodeMessage());
 
         VBox section = new VBox(10);
-        section.getChildren().addAll(encodeLabel, messageInput, encodeButton);
+        section.getChildren().addAll(encodeLabel, messageInput, depthLabel, depthInput, encodeButton);
         return section;
     }
 
@@ -264,14 +271,23 @@ public class Main extends Application {
 
                 updateProgress(25, 100);
 
+                // First encrypt the message using Rail Fence
+                int depth = Integer.parseInt(depthInput.getText());
+                String encryptedMessage = RailFenceCipher.encrypt(messageInput.getText(), depth);
+                System.out.println("Debug - Original message: " + messageInput.getText());
+                System.out.println("Debug - Encrypted message: " + encryptedMessage);
+
+                updateProgress(40, 100);
+
                 BufferedImage originalImage = ImageIO.read(selectedFile);
                 SteganographyImage stegImage = new SteganographyImage(originalImage);
 
-                updateProgress(50, 100);
+                updateProgress(60, 100);
 
-                BufferedImage modifiedImage = Steganography.hideMessage(stegImage, messageInput.getText());
+                // Use the encrypted message here
+                BufferedImage modifiedImage = Steganography.hideMessage(stegImage, encryptedMessage);
 
-                updateProgress(75, 100);
+                updateProgress(80, 100);
 
                 File outputFile = new File(filename + ".png");
                 ImageIO.write(modifiedImage, "PNG", outputFile);
@@ -310,6 +326,22 @@ public class Main extends Application {
             showAlert(Alert.AlertType.WARNING, "Warning", "Please select an image first.");
             return;
         }
+        // Prompt for rail depth
+        TextInputDialog depthDialog = new TextInputDialog("3");
+        depthDialog.setTitle("Rail Fence Depth");
+        depthDialog.setHeaderText("Enter the Rail Fence depth used for encryption");
+        depthDialog.setContentText("Depth (2-10):");
+
+        Optional<String> depthResult = depthDialog.showAndWait();
+        if (depthResult.isEmpty()) return;
+
+        int depth;
+        try {
+            depth = Integer.parseInt(depthResult.get());
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Invalid depth value");
+            return;
+        }
 
         Task<String> decodeTask = new Task<>() {
             @Override
@@ -317,15 +349,21 @@ public class Main extends Application {
                 updateProgress(0, 100);
 
                 BufferedImage encodedImage = ImageIO.read(selectedFile);
-                updateProgress(33, 100);
+                updateProgress(25, 100);
 
                 SteganographyImage stegImage = new SteganographyImage(encodedImage);
-                updateProgress(66, 100);
+                updateProgress(50, 100);
 
-                String extracted = Steganography.extractMessage(stegImage, stegImage.getTotalPixels());
+                // Extract the encrypted message
+                String extractedEncrypted = Steganography.extractMessage(stegImage, stegImage.getTotalPixels());
+                extractedEncrypted = extractedEncrypted.substring(0, extractedEncrypted.indexOf("EOF"));
+                updateProgress(75, 100);
+
+                // Decrypt the message
+                String decryptedMessage = RailFenceCipher.decrypt(extractedEncrypted, depth);
                 updateProgress(100, 100);
 
-                return extracted.substring(0, extracted.indexOf("EOF"));
+                return decryptedMessage;
             }
         };
 
@@ -359,6 +397,16 @@ public class Main extends Application {
         }
         if (messageInput.getText().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Warning", "Please enter a message to encode.");
+            return false;
+        }
+        try {
+            int depth = Integer.parseInt(depthInput.getText());
+            if (depth < 2 || depth > 10) {
+                showAlert(Alert.AlertType.WARNING, "Warning", "Rail depth must be between 2 and 10.");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.WARNING, "Warning", "Please enter a valid number for rail depth.");
             return false;
         }
         return true;
